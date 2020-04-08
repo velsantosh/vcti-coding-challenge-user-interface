@@ -56,7 +56,7 @@ class TakeChallenge extends Component {
                 <p>Take Subject challenge  - This type of test consists of questions against which options are provided to select.To solve the challenge click on below link.</p>
                 <Nav>
                   <NavItem>
-                    <NavLink tag={RRNavLink} to="/taketest">Take Objective Challenge</NavLink>
+                    <NavLink tag={RRNavLink} to="/takeobjectivetest">Take Objective Challenge</NavLink>
                   </NavItem>                 
                 </Nav>               
               </CardBody>

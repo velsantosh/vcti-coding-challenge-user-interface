@@ -1,29 +1,66 @@
 import React, { Component} from 'react';
 import ObjectiveQuestion from '../ObjtiveQuestion/ObjectiveQuestion';
 import ObjectiveQuestionStep from '../ObjectiveQuestionStep/ObjectiveQuestionStep';
-import objQuestions from './Questions';
 import MultiStep from 'react-multistep';
 import Confirm from '../ObjtiveQuestion/Confirm';
-
+import ScheduledChallengeDataService from '../../../../service/ScheduledChallengeDataService';
 
 class ObjectiveQuestionWizard extends Component {
     constructor(props){
         super(props);
         this.state={
-            questions:objQuestions,
+            objQuestions:[],
             step:0,
             result:[]
         };        
     }
 
+componentDidMount(){
+  this.getScheduledQuestionsFromDB();
+}
+
+getScheduledQuestionsFromDB(){
+
+  console.log("this . props inside get ObjectiveQuestions data ", this.props);
+  ScheduledChallengeDataService.getScheduledQuestionByUserId(this.props).then(
+    questionBank => {
+      console.log("objective questionBank data : ", questionBank.data)
+
+     if(questionBank.data===null){
+       console.log("response null")
+     }
+     else{
+      questionBank.data.map((myQuestion) => {
+        console.log("inside questionBank myQuestion: ", myQuestion);
+        var filteredObjQuestion = questionBank.data.filter(ques => {
+        console.log("question type"+ ques.type);
+          return ques.type === "OBJECTIVE";
+        })
+        this.setState({
+          objQuestions : filteredObjQuestion
+            }, ()=> {console.log("objQuestions :", this.state.objQuestions)});
+       } );
+     }
+  } )
+}
+
     handleOptionSelection = e => {
-        console.log("handleOptionSelection");
-        console.log(this.state);
+        console.log("handleOptionSelection :",this.state.objQuestions[this.state.step]);
         console.log(e.currentTarget.value);
-        let resultValue = {
-            questionContent:objQuestions[this.state.step].question,
-            selectedAnswer:e.currentTarget.value
-        };
+
+        let key ={
+          qid :this.state.objQuestions[this.state.step].id,
+          userId :"test_user" 
+          //userId : this.props.userId
+        }
+
+        let resultValue = {         
+            questionContent:this.state.objQuestions[this.state.step].statement,
+            selectedoption:e.currentTarget.value,
+            selectedAnswer:e.currentTarget.value,
+            key :key
+        };        
+
         this.setState((prevState)=>
             {
               var existingquestionContents = this.state.result.map((obj) => obj.questionContent);
@@ -43,7 +80,6 @@ class ObjectiveQuestionWizard extends Component {
             }
         );
 
-        console.log(this.state.result);
     }
 
   // Proceed to next step
@@ -76,14 +112,21 @@ class ObjectiveQuestionWizard extends Component {
 
         let nextPage;
 
-        if(idx > (objQuestions.length-1)){
+        if(idx > (this.state.objQuestions.length-1)){
+          console.log("ObjectiveQuestionWizard =======>nextPage ");
+
           nextPage = (
-            <Confirm result={this.state.result}  prevstep={this.prevStep} nextstep={this.nextStep} result={this.state.result}/>
+            <Confirm result={this.state.result}  prevstep={this.prevStep}
+             nextstep={this.nextStep} /> //result={this.state.result}
           );
         }
         else {
+          console.log("ObjectiveQuestionWizard =======>",this.state.result);
+
           nextPage = (
-            <ObjectiveQuestionStep result={this.state.result} handleOptionSelection={this.handleOptionSelection} prevstep={this.prevStep} nextstep={this.nextStep} answerOptions={objQuestions[idx].answers} count={objQuestions.length} content={objQuestions[idx].question} id={"steps" + idx} indentid={idx}/>
+            <ObjectiveQuestionStep result={this.state.result} handleOptionSelection={this.handleOptionSelection}
+             prevstep={this.prevStep} nextstep={this.nextStep} answerOptions={this.state.objQuestions[idx].options} 
+             count={this.state.objQuestions.length} content={this.state.objQuestions[idx].statement} id={"steps" + idx} indentid={idx}/>
           );
         }
 

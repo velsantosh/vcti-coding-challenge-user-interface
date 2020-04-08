@@ -26,17 +26,21 @@ class ObjectiveQuestion extends Component {
       }
 
     renderAnswerOptions(key) {
+      
+      if (key != null)
+      {
         return (
           <AnswerOption
-            key={key.content}
-            answerContent={key.content}
-            answerType={key.type}
+            key={key}
+            answerContent={key}
+            answerType={key}
             answer={this.props.answer}
             questionId={this.props.id}
             onAnswerSelected={this.props.handleOptionSelection}
             result={this.props.result}
           />
         );
+      }
       }
 
     render(){       

@@ -2,19 +2,30 @@ import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import {Button,Card,CardBody, CardHeader} from 'reactstrap';
 import { Container, Row, Col } from 'reactstrap';
+import ScheduledChallengeDataService from '../../../../service/ScheduledChallengeDataService';
 
 
 export class Confirm extends Component {
+
+  confirmAndContinue = e => {
+    e.preventDefault();
+
+    console.log("from confirmAndContinue");
+    ScheduledChallengeDataService.submitScheduledQuestionResultsByUserId(this.props.result)
+  
+  };
   continue = e => {
     e.preventDefault();
     // PROCESS FORM //
     this.props.nextStep();
   };
 
+ /*
   back = e => {
     e.preventDefault();
-    this.props.prevStep();
+    this.ObjectiveQuestion.prevStep();
   };
+ */
 
   render() {
 
@@ -47,18 +58,12 @@ export class Confirm extends Component {
           <div>
                       <Container>
                         <Row>
+                         
                           <Col>
                           <Button
                             color="primary"                            
                             style={{paddingLeft:"40",paddingRight:"40"}}                            
-                            onClick={this.prevStep}
-                            >Back</Button>
-                          </Col>
-                          <Col>
-                          <Button
-                            color="primary"                            
-                            style={{paddingLeft:"40",paddingRight:"40"}}                            
-                            onClick={this.continue}
+                            onClick={this.confirmAndContinue}
                             >Confirm and Submit</Button>
                           </Col>
                           
