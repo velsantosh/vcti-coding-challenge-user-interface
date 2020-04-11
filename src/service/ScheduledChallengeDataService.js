@@ -33,6 +33,12 @@ class ScheduledChallengeDataService {
         return axios.post(`http://localhost:8083/addSubjRes`, subQuesResultSet);
     }
 
+    runScheduledQuestionTestCases(validateProgramContent)  {
+
+        console.log("runScheduledQuestionTestCases submitted : ", validateProgramContent);
+        return axios.post(`http://localhost:8082/validateSubjQues`, validateProgramContent);
+    }
+
 }
 
 export default new ScheduledChallengeDataService()

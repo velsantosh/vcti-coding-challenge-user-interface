@@ -72,7 +72,7 @@ class TakeTest extends Component {
           });
 
           this.setState({
-            editorContent: ` Class TakeTest{
+            editorContent: ` Class ExampleClass{
                   public static void main(String[] str){
                     System.out.println("Start the take test");
                   }}`});
@@ -151,8 +151,24 @@ class TakeTest extends Component {
   }
 
   handleRunTest = (e) => {
+
+    console.log("my question id ", this.state.qId);
+
+    let questionProgramMap = {
+      qId : this.state.qId,
+      questId : this.state.editorContent
+
+    }
+
+    let validateProgramContent = {
+      userId: "test_user",
+      questionProgramMap: questionProgramMap,
+    };
+
     console.log("clicked on run test");
     this.setState({ runtestClicked: true });
+    ScheduledChallengeDataService.runScheduledQuestionTestCases(validateProgramContent);
+
   };
 
   render() {
